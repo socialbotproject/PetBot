@@ -2,16 +2,21 @@ import os
 import pickle
 import time
 from pathlib import Path
+from threading import Thread
 
 import cv2
 
+import audio
+
+greeted = False
+dialog = False
 dir_path = os.path.dirname(os.path.realpath(__file__))
-face_detect = cv2.CascadeClassifier(dir_path + '/lbpcascade_frontalface_improved.xml')
+face_detect = cv2.CascadeClassifier(dir_path + '/recognizers/lbpcascade_frontalface_improved.xml')
 dir_path = dir_path + '/faces/'
 Path(dir_path).mkdir(parents=True, exist_ok=True)
 cap = cv2.VideoCapture(0)
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("face-trainer.yml")
+recognizer.read("./recognizers/face-trainer.yml")
 last_recorded_time = time.time()
 
 with open("picklejar/face-labels.pickle", 'rb') as f:
@@ -19,13 +24,13 @@ with open("picklejar/face-labels.pickle", 'rb') as f:
     labels = {v: k for k, v in og_labels.items()}
 
 while True:
+
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_detect.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
     curr_time = time.time()
     for (x, y, w, h) in faces:
         roi_gray = gray[y:y + h, x:x + w]
-        print(x, y, w, h)
         color = (255, 0, 0)
         stroke = 2
         end_cord_x = x + w
@@ -38,6 +43,10 @@ while True:
             color = (255, 255, 255)
             stroke = 2
             cv2.putText(frame, f'{name}: {conf}', (x, y), font, 1, color, stroke, cv2.LINE_AA)
+            if not dialog:
+                thread = Thread(target=audio.init_audio, args=([name]))
+                thread.start()
+                dialog = True
 
     cv2.imshow('frame', frame)
 
