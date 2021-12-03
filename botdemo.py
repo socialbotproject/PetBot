@@ -7,11 +7,11 @@ import cv2
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 face_detect = cv2.CascadeClassifier(dir_path + '/lbpcascade_frontalface_improved.xml')
-dir_path = dir_path + '/your beautiful face/'
+dir_path = dir_path + '/faces/'
 Path(dir_path).mkdir(parents=True, exist_ok=True)
 cap = cv2.VideoCapture(0)
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read("face-trainner.yml")
+recognizer.read("face-trainer.yml")
 last_recorded_time = time.time()
 
 with open("picklejar/face-labels.pickle", 'rb') as f:

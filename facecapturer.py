@@ -5,12 +5,12 @@ from pathlib import Path
 import cv2
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-face_detect = cv2.CascadeClassifier(dir_path + '/lbpcascade_frontalface_improved.xml')
+face_detect = cv2.CascadeClassifier(dir_path + './recognizers/lbpcascade_frontalface_improved.xml')
 cap = cv2.VideoCapture(0)
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 last_recorded_time = time.time()
 name = input("Enter name to label face captures that are going to be saved ")
-dir_path = dir_path + f'/your beautiful face/{name}/'
+dir_path = dir_path + f'/faces/{name}/'
 Path(dir_path).mkdir(parents=True, exist_ok=True)
 imagenumber = 0
 

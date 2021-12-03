@@ -6,7 +6,7 @@ import numpy as np
 from PIL import Image
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-image_dir = os.path.join(BASE_DIR, "your beautiful face")
+image_dir = os.path.join(BASE_DIR, "faces")
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 current_id = 0
@@ -33,4 +33,4 @@ with open("picklejar/face-labels.pickle", 'wb') as f:
     pickle.dump(label_ids, f)
 
 recognizer.train(x_train, np.array(y_labels))
-recognizer.save("./face-trainner.yml")
+recognizer.save("./recognizers/face-trainer.yml")
